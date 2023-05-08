@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bmi/Screen/Home/Controllor/HomeControllor.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,10 +11,27 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
   HomeControllor homeControllor = Get.put(
     HomeControllor(),
   );
+  AnimationController? animationController;
+  Animation? LeftToRight;
+
+  @override
+  void initState() {
+    super.initState();
+
+    animationController = AnimationController(
+      vsync: this,
+      duration: Duration(
+        seconds: 3,
+      ),
+    );
+
+    LeftToRight = Tween(begin: -5.0, end: 0.75).animate(animationController!);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   SizedBox(height: 20),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       InkWell(
                         onTap: () {
@@ -139,9 +158,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           "Height",
                           style: TextStyle(
                             fontSize: 30,
-                            color: Colors.white,
+                            color: Color(0xff868CA8),
                           ),
                         ),
+                        SizedBox(height: 10),
                         Obx(
                           () => Text(
                             "${homeControllor.isSlider.value.toInt()} cm",
@@ -151,11 +171,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
+                        SizedBox(height: 10),
                         Obx(
                           () => Slider(
                             value: homeControllor.isSlider.value,
                             min: 0,
                             max: 1000.0,
+                            activeColor: Color(0xffFF0267),
+                            inactiveColor: Color(0xffA6ABC8),
                             onChanged: (value) {
                               print(value);
                               homeControllor.isSlider.value = value;
@@ -188,11 +211,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             SizedBox(height: 10),
-                            Text(
-                              "${homeControllor.isWeight.value}",
-                              style: TextStyle(
-                                fontSize: 30,
-                                color: Colors.white,
+                            Obx(
+                              () => Text(
+                                "${homeControllor.isWeight.value}",
+                                style: TextStyle(
+                                  fontSize: 30,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                             SizedBox(height: 10),
@@ -257,11 +282,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             SizedBox(height: 10),
-                            Text(
-                              "1",
-                              style: TextStyle(
-                                fontSize: 30,
-                                color: Colors.white,
+                            Obx(
+                              () => Text(
+                                "${homeControllor.isAge.value}",
+                                style: TextStyle(
+                                  fontSize: 30,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                             SizedBox(height: 10),
@@ -272,10 +299,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                   height: 50,
                                   width: 50,
                                   decoration: BoxDecoration(
-                                      color: Color(0xff101530),
-                                      shape: BoxShape.circle),
+                                    color: Color(0xff101530),
+                                    shape: BoxShape.circle,
+                                  ),
                                   child: IconButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      homeControllor.isAge.value++;
+                                    },
                                     icon: Icon(
                                       Icons.add,
                                       color: Colors.white,
@@ -286,10 +316,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                   height: 50,
                                   width: 50,
                                   decoration: BoxDecoration(
-                                      color: Color(0xff101530),
-                                      shape: BoxShape.circle),
+                                    color: Color(0xff101530),
+                                    shape: BoxShape.circle,
+                                  ),
                                   child: IconButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      homeControllor.isAge.value--;
+                                    },
                                     icon: Icon(
                                       Icons.remove,
                                       color: Colors.white,
@@ -311,7 +344,15 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Container(
                 height: 80,
                 width: double.infinity,
-                color: Colors.black,
+                color: Color(0xffB70248),
+                alignment: Alignment.center,
+                child: Text(
+                  "Calculate Your BMI",
+                  style: TextStyle(
+                    fontSize: 30,
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ),
           ],
